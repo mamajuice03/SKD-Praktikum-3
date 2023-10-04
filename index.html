@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vigenere Cipher</title>
+</head>
+<body>
+    <h1>Vigenere Cipher</h1>
+    <form id="cipher-form">
+        <label for="plaintext">Plaintext/Chipertext:</label>
+        <input type="text" id="plaintext" name="plaintext" required><br><br>
+        
+        <label for="key">Key:</label>
+        <input type="text" id="key" name="key" required><br><br>
+
+        <input type="button" value="Deskripsi" onclick="encryptText()">
+        <input type="button" value="Enkripsi" onclick="decryptText()">
+    </form>
+
+    <h2>Hasil:</h2>
+
+    <p id="result"></p>
+
+    <script>
+        
+        function vigenere_encrypt(plain_text, key) {
+            const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            let encrypted_text = ''; 
+            let keyIndex = 0;
+
+            for (let i = 0; i < plain_text.length; i++) {
+                const plainChar = plain_text.charAt(i);
+                if (plainChar === ' ') {
+                   
+                    encrypted_text += ' ';
+                    continue;
+                }
+
+                const keyChar = key.charAt(keyIndex % key.length).toUpperCase(); 
+                const shift = alphabet.indexOf(keyChar); 
+
+                if (alphabet.includes(plainChar.toUpperCase())) {
+                    const isUpperCase = plainChar === plainChar.toUpperCase();
+                    const index = alphabet.indexOf(plainChar.toUpperCase()); 
+                    let encryptedIndex = (index + shift) % 26; 
+                    if (encryptedIndex < 0) {
+                        encryptedIndex += 26; 
+                    }
+
+                    let encryptedChar = alphabet.charAt(encryptedIndex); 
+
+                    if (!isUpperCase) {
+                        
+                        encryptedChar = encryptedChar.toLowerCase();
+                    }
+
+                    encrypted_text += encryptedChar; 
+                } else {
+                    
+                    encrypted_text += plainChar;
+                }
+
+                keyIndex++; 
+            }
+
+            return encrypted_text;
+        }
+
+
+        
+        function encryptText() {
+            const plaintext = document.getElementById("plaintext").value;
+            const key = document.getElementById("key").value.toUpperCase();
+            const encrypted_text = vigenere_encrypt(plaintext, key);
+            
+            document.getElementById("result").textContent = `Encrypted Text: ${encrypted_text}`;
+        }
+
+        
+    </script>
+
+<script>
+    
+    function vigenere_decrypt(cipher_text, key) {
+        const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        let decrypted_text = ''; 
+        let keyIndex = 0; 
+
+        for (let i = 0; i < cipher_text.length; i++) {
+            const cipherChar = cipher_text.charAt(i); 
+            if (cipherChar === ' ') {
+                
+                decrypted_text += ' ';
+                continue;
+            }
+
+            const keyChar = key.charAt(keyIndex % key.length).toUpperCase();
+            const shift = alphabet.indexOf(keyChar);
+
+            if (alphabet.includes(cipherChar.toUpperCase())) {
+                const isUpperCase = cipherChar === cipherChar.toUpperCase();
+                const index = alphabet.indexOf(cipherChar.toUpperCase());
+
+                let decryptedIndex = (index - shift) % 26; 
+                if (decryptedIndex < 0) {
+                    decryptedIndex += 26; 
+                }
+
+                let decryptedChar = alphabet.charAt(decryptedIndex); 
+
+                if (!isUpperCase) {
+                    
+                    decryptedChar = decryptedChar.toLowerCase();
+                }
+
+                decrypted_text += decryptedChar;
+            } else {
+                
+                decrypted_text += cipherChar;
+            }
+
+            keyIndex++; 
+        }
+
+        return decrypted_text;
+    }
+
+
+
+    function decryptText() {
+        const ciphertext = document.getElementById("plaintext").value;
+        const key = document.getElementById("key").value.toUpperCase();
+        const decrypted_text = vigenere_decrypt(ciphertext, key);
+
+        document.getElementById("result").textContent = `Decrypted Text: ${decrypted_text}`;
+    }
+</script>
+
+</body>
+</html>
